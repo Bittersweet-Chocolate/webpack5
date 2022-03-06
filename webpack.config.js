@@ -9,6 +9,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const HtmlWebpackExternalsPlugin = require('html-webpack-externals-plugin')
 const copyWebpackPlugin = require('copy-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 module.exports = {
   mode: 'development',
   entry: {
@@ -25,44 +26,26 @@ module.exports = {
     publicPath: '/'
   },
   module: {
-    rules: [
-      // webpack5  将不再使用以下loader
-      // { test: /\.txt$/, use: 'raw-loader' },
-      // {
-      //   test: /\.(png|jpg|gif|svg)$/,
-      //   use: [{
-      //     loader: 'url-loader',
-      //     options: {
-      //       // 对图片重命名，[hash:10]hash前10位 [ext]原文件拓展名
-      //       name: "[name]-[hash:8].[ext]",
-      //       // outputPath: 'images/',
-      //       limit: 8 * 1024,
-      //       esModule: false
-      //     }
-      //   }],
-      //   type: 'javascript/auto'
-      // },
-      {
+    rules: [{
         test: /\.txt$/,
-        type: 'asset/source',
-        // generator: {
-        //   outputPath: 'txt/',
-        //   publicPath: 'txt/'
-        // },
+        type: 'asset/source'
+      },
+      {
+        test: /\.html$/,
+        use: ['html-loader']
       },
       {
         test: /\.css$/,
-        use: [
-          'style-loader', 'css-loader'
-        ]
+        use: [{
+          loader: MiniCssExtractPlugin.loader,
+        }, 'css-loader']
       },
       {
         test: /\.less$/,
         use: [
-          'style-loader', 'css-loader', 'less-loader'
+          MiniCssExtractPlugin.loader, 'css-loader', 'less-loader'
         ]
       },
-      { test: /\.html$/, use: ['html-loader'] },
       {
         test: /\.(png|jpg|gif|svg)$/,
         type: 'asset',
@@ -110,7 +93,10 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './src/index.html'
+      template: './src/index.html',
+      filename: '1.html',
+      // 根据入口设定的模块来
+      chunks: ['main']
     }),
     new HtmlWebpackExternalsPlugin({
       externals: [{
@@ -119,6 +105,7 @@ module.exports = {
         global: '_'
       }]
     }),
+    // 自定义全局变量插件
     new webpack.DefinePlugin({
       PRODUCTION: JSON.stringify(true),
       VERSION: JSON.stringify('5fa3b9')
@@ -131,7 +118,8 @@ module.exports = {
     }),
     new CleanWebpackPlugin({
       verbose: true,
-    })
+    }),
+    new MiniCssExtractPlugin()
   ],
   devServer: {
     // 给静态资源文件一个路径，localhost:8080/index.txt
@@ -157,6 +145,7 @@ module.exports = {
         target: 'http://localhost:3000',
       },
     },
+    // 自己设定请求地址 Middlewares
     setupMiddlewares(middlewares, devServer) {
       // webpack-dev-server 其实就是一个express服务器
       if (!devServer) {

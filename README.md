@@ -80,13 +80,36 @@
 
 ## css 插件
 
+- css 打包成单独文件夹插件`MiniCssExtractPlugin`，本质是拿到`css-loader`处理的信息进行适配
+- css 兼容处理插件`postcss-loader`
+
 ## bundle、chunk、hash
 
 webpack 中没有 bundle 概念，成为 asset
 
 - 每一个入口一般来说会生成一个 chunk，一个代码会生成一个 bundle 打包的资源文件
 
-## hash、
+## hash、chunkHash、contentHash
+
+- hash 整体模块，某一个改变即改变；整体模块（多个模块）
+- chunkHash 自己所属的模块改变，则改变；模块（多个内容）
+- contentHash 自己所属内容改变则改变； 内容
+
+## 压缩插件
+
+### JS、CSS、HTML 压缩
+
+- `optimize-css-assets-webpack-plugin`优化压缩 CSS 插件
+- `terser-webpack-plugin`优化压缩 JS 的插件，如果已经是 production 模式了就不需要配置了
+- `html-webpack-plugin`参数配置
+
+### 图片压缩
+
+### px 转换 rem
+
+- `lib-flexible`+rem，实现移动端自适应
+- `px2rem-loader`自动将 px 转为 rem
+- `px2rem` 页面渲染时计算根元素的`font-size`值
 
 ## 热更新配置问题
 
