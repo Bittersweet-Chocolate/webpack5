@@ -11,18 +11,17 @@ let img = new Image()
 img.src = logo
 document.body.appendChild(img)
 console.log(title)
-console.log(1)
 
 let a = name => {
   console.log(name)
 }
 a('1')
 
-// /**
-//  * @param {any} target 装饰的目标
-//  * @param {any} key 装饰器的key PI
-//  * @param {any} descriptor  属性目标
-//  */
+/**
+ * @param {any} target 装饰的目标
+ * @param {any} key 装饰器的key PI
+ * @param {any} descriptor  属性目标
+ */
 function readOnly(target, key, descriptor) {
   descriptor.writable = false
 }
